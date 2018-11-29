@@ -8,7 +8,10 @@ class Category
 {
     public function getCate()
     {
-        return json_encode(CategoryModel::order('id asc')->limit(10)->select());
+        return json_encode(CategoryModel::where('parent_id',0)
+            ->order('id asc')
+            ->limit(10)
+            ->select());
     }
 
     public function getCategory()
