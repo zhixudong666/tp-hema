@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>商品分类</title>
+  <script src="/static/js/vue.js"></script>
+  <script src="/static/js/axios.js"></script>
+  <link rel="stylesheet" href="/static/layui/css/layui.css">
+  <style>
+
+    * {
+      margin:0;
+      padding:0;
+      list-style: none;
+      text-decoration: none;
+    }
+    html,body{
+      width: 100%;
+      height: 100%;
+    }
+    #app {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <div class="left">
+    <h3 v-on:click="set_current({id: 0, name: '根目录', level: 0})">商品分类列表</h3>
+    <ul>
+      <li v-on:click="set_current(l1)" v-for="l1 in level1">
+        <h4 v-bind:class=" current && current.id === l1.id?'active':'' ">{{l1.name}}</h4>
+        <ul v-show="current.id == l1.id || parent.id == l1.id || grande.id == l1.id">
+          <li v-on:click.stop="set_current(l2)" v-if="l2.parent_id === l1.id" v-for="l2 in level2">
+            <span v-bind:class=" current && current.id === l2.id?'active':'' ">{{l2.name}}</span>
+            <ul v-show="current.id == l2.id || parent.id == l2.id">
+              <li v-if="l3.parent_id === l2.id" v-for="l3 in level3">
+                                    <span v-bind:class=" current && current.id === l3.id?'active':'' " v-on:click.stop="set_current(l3)">
+                                        {{l3.name}}</span>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+  <div class="right">
+    <div style="border:1px solid black;" v-show="current&&current.level!=3">
+      给 {{ current?current.name:''}} 添加子分类
+      <form ref="form" method="post" v-on:submit.prevent="add" enctype="multipart/form-data">
+        <div>
+          名称 <input type="text" name="name" v-model="name">
+        </div>
+        <div>
+          图片 <input name="pic" type="file">
+        </div>
+        <div>
+          序号 <input name="sort" type="text">
+        </div>
+        <div>
+          <button type="submit">添加</button>
+        </div>
+      </form>
+
+    </div>
+    <div style="border:1px solid black;" v-show="current&&current.id">
+      修改当前分类
+      <div>
+        名称 <input type="text" name="name" v-model="current&&current.name">
+      </div>
+      <div>
+        图片 <input type="text" name="pic">
+      </div>
+      <div>
+        序号 <input name="sort" type="text">
+      </div>
+      <div>
+        <button v-on:click="save">保存</button>
+        <button v-on:click="remove">删除</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/static/layui/layui.js"></script>
+<script>
+  axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+
+
+  var app = new Vue({
+    el: '#app',
+    data: {
+      all: [],
+      current: {id: 0, name: '根目录', level: 0},
+      name: '',
+    },
+    computed: {
+      parent: function () {
+        if (this.current.level > 1) {
+          return this.all.filter(v => v.id == this.current.parent_id)[0];
+        } else {
+          return {id: 0, name: '根目录', level: 0}
+        }
+      },
+      grande: function () {
+        if (this.current.level > 2) {
+          var parent = this.all.filter(v => v.id == this.current.parent_id)[0]
+          return this.all.filter(v => v.id == parent.parent_id)[0];
+        } else {
+          return {id: 0, name: '根目录', level: 0}
+        }
+      },
+      level1: function () {
+        return this.all.filter(v => v.level === 1);
+      },
+      level2: function () {
+        return this.all.filter(v => v.level === 2);
+      },
+      level3: function () {
+        return this.all.filter(v => v.level === 3);
+      }
+    },
+    methods: {
+      add: function () {
+        var formData = new FormData(this.$refs.form);
+        formData.append('parent_id', this.current.id);
+        formData.append('level', this.current.level + 1);
+        axios({
+          url: '/admin/category/add',
+          method: 'post',
+          data: formData
+        }).then(res => {
+          this.all = this.all.concat( [ res.data ].map(v => {
+            v.id = Number(v.id);
+            v.level = Number(v.level);
+            v.parent_id = Number(v.parent_id);
+            return v;
+          }) );
+        })
+      },
+      set_current: function (v) {
+        this.current = v;
+      },
+      remove: function () {
+        axios({
+          url: '/admin/category/remove',
+          params: {id: this.current.id}
+        }).then(res => {
+          alert('删除成功');
+          this.all = this.all.filter(v => v.id !== this.current.id);
+          this.current = this.parent;
+        })
+      },
+      save: function () {
+        axios({
+          url: '/admin/category/save',
+          params: this.current
+        }).then(res => {
+          alert('修改成功')
+        })
+      },
+      get: function () {
+        axios('/admin/category/all').then(res => {
+          this.all = res.data;
+        })
+      }
+    },
+    mounted: function () {
+      this.get();
+    }
+  })
+
+
+</script>
+</body>
+</html>
