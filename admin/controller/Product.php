@@ -10,10 +10,10 @@ use think\Request;
 
 class Product extends Rest
 {
-  public function index()
-  {
-    return view();
-  }
+//  public function index()
+//  {
+//    return view();
+//  }
 
   public function test(){
     $product = new ProductModel();

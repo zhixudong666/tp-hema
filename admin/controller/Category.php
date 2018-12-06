@@ -11,10 +11,10 @@ use think\Controller;
 class Category extends Controller
 {
   public $tree = [];
-  public function index()
-  {
-    return view();
-  }
+//  public function index()
+//  {
+//    return view();
+//  }
   // /admin/category/all add save remove
   // /admin/category/category
   public function all()
