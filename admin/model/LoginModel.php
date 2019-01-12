@@ -9,4 +9,13 @@ class LoginModel
     $result = Db::query("SELECT * FROM admin where username = '".$username."' AND password = '".$password."'");
     return $result;
   }
+  public static function updateTime($username)
+  {
+    $time = date("Y/m/d");
+    $time .=" ";
+    $time .=date("h:i:s");
+    Db::table('admin')
+      ->where('username',$username)
+      ->update(['update_time'=>$time]);
+  }
 }

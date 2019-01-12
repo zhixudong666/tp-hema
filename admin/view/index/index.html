@@ -9,7 +9,7 @@
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
     <div class="layui-header hema-header">
-        <div class="layui-logo">河马中台管理系统</div>
+        <div class="layui-logo">小神仙后台管理</div>
         <button class="layui-btn takeout" onclick="takeout()">退出</button>
         <ul class="layui-nav layui-layout-right">
 
@@ -21,6 +21,22 @@
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree" lay-filter="test">
                 <!--添加layui-nav-itemed"-->
+                <li class="layui-nav-item">
+                    <a class="" href="javascript:;">管理员中心</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" data-url="http://localhost:3000/#/admin">管理员管理</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;">用户中心</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:;" data-url="http://localhost:3000/#/user">用户管理</a></dd>
+                        <dd><a href="javascript:;" data-url="http://localhost:3000/#/receiveaddress">地址管理</a></dd>
+                        <!--<dd><a href="javascript:;">积分管理</a></dd>-->
+                        <!--<dd><a href="javascript:;">会员管理</a></dd>-->
+
+                    </dl>
+                </li>
                 <li class="layui-nav-item">
                     <a class="" href="javascript:;">商品中心</a>
                     <dl class="layui-nav-child">
@@ -38,16 +54,6 @@
                         <!--<dd><a href="javascript:;">购物车管理</a></dd>-->
                         <dd><a href="javascript:" data-url="http://localhost:3000/#/order">订单管理</a></dd>
                         <!--<dd><a href="">数据统计</a></dd>-->
-                    </dl>
-                </li>
-                <li class="layui-nav-item">
-                    <a href="javascript:;">用户中心</a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="javascript:;" data-url="http://localhost:3000/#/user">用户管理</a></dd>
-                        <dd><a href="javascript:;" data-url="http://localhost:3000/#/receiveaddress">地址管理</a></dd>
-                        <!--<dd><a href="javascript:;">积分管理</a></dd>-->
-                        <!--<dd><a href="javascript:;">会员管理</a></dd>-->
-
                     </dl>
                 </li>
             </ul>

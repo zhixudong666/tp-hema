@@ -47,7 +47,11 @@ class Category extends Controller
 
   public function getImg(){
     $file = $_FILES['file'];
-    return json_encode($file);
+    $info = $file->validate(['ext'=>'jpg,png'])->move(ROOT_PATH.'public'.DS.'uploads');
+    if($info){
+      $this->success('文件上传成功'.$info->getRealPath());
+    }
+    return json_encode($info);
   }
 
   public function getInfo(){

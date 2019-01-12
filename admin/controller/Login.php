@@ -25,6 +25,7 @@ class Login extends Controller
         'uid' =>$result[0]['id'],
         'username'=>$result[0]['username']
       ];
+      LoginModel::updateTime($username);
       $this->success('登录成功',url('/admin'));
     }
   }
